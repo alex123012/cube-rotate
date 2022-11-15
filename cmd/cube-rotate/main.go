@@ -43,8 +43,8 @@ func main() {
 	flag.IntVar(&screenHeight, "screen.height", screenHeight, "your terminal symbol counts in one line (default 287)")
 	flag.IntVar(&screenWidth, "screen.width", screenWidth, "your terminal symbol counts in one column (default 67)")
 	flag.IntVar(&cubesCount, "cubes.count", cubesCount, "your terminal symbol counts in one line (default 287)")
-	flag.Var(&horizontalOffsetsCMD, "cube.horizontal-offsets", "horizontal positions of cubes, count must be equal to cubes.count")
-	flag.Var(&cubesWidthsCMD, "cube.widths", "widths of cubes, count must be equal to cubes.count")
+	flag.Var(&horizontalOffsetsCMD, "cubes.horizontal-offsets", "horizontal positions of cubes, count must be equal to cubes.count")
+	flag.Var(&cubesWidthsCMD, "cubes.widths", "widths of cubes, count must be equal to cubes.count")
 
 	flag.Parse()
 
