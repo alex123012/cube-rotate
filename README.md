@@ -5,7 +5,7 @@ This is simple CLI app that will print rotating cubes and toruses in terminal.
 Open [release](https://github.com/alex123012/cube-rotate/releases) page and find appropriate release for your system and arch, than download and unpack binary
 ```bash
 mkdir -p bin
-wget https://github.com/alex123012/cube-rotate/releases/download/v0.0.1/cube-rotate-${VERSION}-${OS}-${ARCH}.tar.gz
+wget https://github.com/alex123012/cube-rotate/releases/download/${VERSION}/cube-rotate-${VERSION}-${OS}-${ARCH}.tar.gz
 tar -C bin/ -xf cube-rotate-${VERSION}-${OS}-${ARCH}.tar.gz cube-rotate
 ```
 
