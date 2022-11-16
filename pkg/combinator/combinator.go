@@ -4,33 +4,34 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/alex123012/cube-rotate/pkg/cube"
+	"github.com/alex123012/cube-rotate/pkg/common"
 )
 
 type CubePrinter interface {
-	RotateAll(config *cube.CubeConfig)
+	RotateAll(config *common.Config, framesPerSecond int)
 }
 type cubeCombinator struct {
-	cubes []*cube.Cube
+	rotators []common.Rotator
 }
 
-func NewCubeCombinator(cubes []*cube.Cube) CubePrinter {
+func NewCubeCombinator(rotators []common.Rotator) CubePrinter {
 	return &cubeCombinator{
-		cubes: cubes,
+		rotators: rotators,
 	}
 }
-func (c *cubeCombinator) RotateAll(config *cube.CubeConfig) {
-	cubeCount := len(c.cubes)
+func (c *cubeCombinator) RotateAll(config *common.Config, framesPerSecond int) {
+	cubeCount := len(c.rotators)
 	cubesChan := make([]chan []rune, cubeCount)
 	for i := 0; i < cubeCount; i++ {
 		cubesChan[i] = make(chan []rune, 1)
-		go c.cubes[i].Rotate(cubesChan[i])
+		go c.rotators[i].Rotate(cubesChan[i])
 	}
 
 	resultBuffer := make([]rune, config.Screen.Height*config.Screen.Width)
 	fmt.Printf("\x1b[2J")
-	for {
-		cube.MemsetLoop(resultBuffer, config.BackgroundASCIICode)
+	frame_delay := 1000 / framesPerSecond
+	for range time.Tick(time.Duration(frame_delay) * time.Millisecond) {
+		common.MemsetLoop(resultBuffer, config.BackgroundASCIICode)
 		for _, ch := range cubesChan {
 			CompareRunesSlices(resultBuffer, <-ch, config.BackgroundASCIICode)
 		}

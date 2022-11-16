@@ -2,49 +2,9 @@ package cube
 
 import (
 	"math"
+
+	"github.com/alex123012/cube-rotate/pkg/common"
 )
-
-type Screen struct {
-	Width  int
-	Height int
-}
-type CubeConfig struct {
-	CubeWidth           int
-	BackgroundASCIICode rune
-	DistanceFromCam     int
-	HorizontalOffset    float64
-	K1                  float64
-	IncrementSpeed      float64
-	Screen              Screen
-}
-
-func (c *CubeConfig) CopyWithDefault() *CubeConfig {
-	config := new(CubeConfig)
-	*config = *c
-	if config.CubeWidth == 0 {
-		config.CubeWidth = 20
-	}
-	if config.BackgroundASCIICode == 0 {
-		config.BackgroundASCIICode = '.'
-	}
-	if config.DistanceFromCam == 0 {
-		config.DistanceFromCam = 100
-	}
-	if config.K1 == 0 {
-		config.K1 = 40
-	}
-	if config.IncrementSpeed == 0 {
-		config.IncrementSpeed = 0.6
-	}
-	if config.Screen.Height == 0 {
-		config.Screen.Height = 44
-	}
-	if config.Screen.Width == 0 {
-		config.Screen.Width = 160
-	}
-
-	return config
-}
 
 type Cube struct {
 	cubeWidth           float64
@@ -56,12 +16,12 @@ type Cube struct {
 	k1                  float64
 	incrementSpeed      float64
 	heightWidthMultiply int
-	screen              Screen
+	screen              common.Screen
 	coefA, coefB, coefC float64
 }
 
-func NewCube(cubeConfig *CubeConfig) *Cube {
-	config := cubeConfig.CopyWithDefault()
+func NewCube(cubeConfig *common.Config) common.Rotator {
+	config := cubeConfig.CopyWithDefaultForCube()
 	heightWidthMultiply := config.Screen.Width * config.Screen.Height
 	return &Cube{
 		cubeWidth:           (float64)(config.CubeWidth),
@@ -76,10 +36,10 @@ func NewCube(cubeConfig *CubeConfig) *Cube {
 		heightWidthMultiply: heightWidthMultiply,
 	}
 }
-func (c *Cube) Rotate(bufferChan chan []rune) {
+func (c *Cube) Rotate(bufferChan chan<- []rune) {
 	for {
-		MemsetLoop(c.buffer, c.backgroundASCIICode)
-		MemsetLoop(c.zBuffer, 0)
+		common.MemsetLoop(c.buffer, c.backgroundASCIICode)
+		common.MemsetLoop(c.zBuffer, 0)
 		for cubeX := -c.cubeWidth; cubeX < c.cubeWidth; cubeX += c.incrementSpeed {
 			for cubeY := -c.cubeWidth; cubeY < c.cubeWidth; cubeY += c.incrementSpeed {
 				c.calculateForSurface(cubeX, cubeY, -c.cubeWidth, '@')
@@ -107,8 +67,7 @@ func (c *Cube) calculateForSurface(cubeX, cubeY, cubeZ float64, ch rune) {
 	xp := (int)(float64(c.screen.Width)/2 + c.horizontalOffset + c.k1*ooz*x*2)
 	yp := (int)(float64(c.screen.Height)/2 + c.k1*ooz*y)
 
-	idx := xp + yp*c.screen.Width
-	if idx >= 0 && idx < c.heightWidthMultiply && ooz > c.zBuffer[idx] {
+	if idx := xp + yp*c.screen.Width; idx >= 0 && idx < c.heightWidthMultiply && ooz > c.zBuffer[idx] {
 		c.zBuffer[idx] = ooz
 		c.buffer[idx] = ch
 	}
@@ -127,10 +86,4 @@ func (c *Cube) calculateY(i, j, k float64) float64 {
 
 func (c *Cube) calculateZ(i, j, k float64) float64 {
 	return k*math.Cos(c.coefA)*math.Cos(c.coefB) - j*math.Sin(c.coefA)*math.Cos(c.coefB) + i*math.Sin(c.coefB)
-}
-
-func MemsetLoop[T any](a []T, v T) {
-	for i := range a {
-		a[i] = v
-	}
 }
