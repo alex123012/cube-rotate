@@ -33,6 +33,8 @@ func main() {
 		screenHeight int = 67
 		cubesCount   int = 1
 
+		backgroudnSymbol = "."
+
 		horizontalOffsetsCMD   = make(SlicaVar, 0)
 		horizontalOffsetValues = make([]float64, 0)
 
@@ -40,10 +42,35 @@ func main() {
 		cubeWidthValues = make([]int, 0)
 	)
 
-	flag.IntVar(&screenHeight, "screen.height", screenHeight, "your terminal symbol counts in one line (default 287)")
-	flag.IntVar(&screenWidth, "screen.width", screenWidth, "your terminal symbol counts in one column (default 67)")
-	flag.IntVar(&cubesCount, "cubes.count", cubesCount, "your terminal symbol counts in one line (default 287)")
-	flag.Var(&horizontalOffsetsCMD, "cubes.horizontal-offsets", "horizontal positions of cubes, count must be equal to cubes.count")
+	flag.IntVar(
+		&screenHeight,
+		"screen.height",
+		screenHeight,
+		"your terminal symbol counts in one line",
+	)
+	flag.IntVar(
+		&screenWidth,
+		"screen.width",
+		screenWidth,
+		"your terminal symbol counts in one column",
+	)
+	flag.IntVar(
+		&cubesCount,
+		"cubes.count",
+		cubesCount,
+		"your terminal symbol counts in one line",
+	)
+	flag.Var(
+		&horizontalOffsetsCMD,
+		"cubes.horizontal-offsets",
+		"horizontal positions of cubes, count must be equal to cubes.count",
+	)
+	flag.StringVar(
+		&backgroudnSymbol,
+		"cubes.background-symbol",
+		backgroudnSymbol,
+		"background symbol to use",
+	)
 	flag.Var(&cubesWidthsCMD, "cubes.widths", "widths of cubes, count must be equal to cubes.count")
 
 	flag.Parse()
@@ -53,6 +80,7 @@ func main() {
 			Width:  screenWidth,
 			Height: screenHeight,
 		},
+		BackgroundASCIICode: []rune(backgroudnSymbol)[0],
 	}).CopyWithDefault()
 
 	cubes := make([]*cube.Cube, cubesCount)
@@ -85,7 +113,9 @@ func main() {
 	}
 
 	if len(horizontalOffsetValues) < cubesCount || len(cubeWidthValues) < cubesCount {
-		fmt.Println("Provide horisontal offsets or cube widths for all cubes (count must be equal to cubes.count)")
+		fmt.Println(
+			"Provide horisontal offsets or cube widths for all cubes (count must be equal to cubes.count)",
+		)
 		os.Exit(1)
 	}
 	for i := range cubes {

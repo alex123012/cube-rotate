@@ -12,14 +12,16 @@ tar -C bin/ -xf cube-rotate-${VERSION}-${OS}-${ARCH}.tar.gz cube-rotate
 ## Usage
 ```text
 Usage of bin/cube-rotate:
+  -cubes.background-symbol string
+    	background symbol to use (default ".")
   -cubes.count int
-        your terminal symbol counts in one line (default 287) (default 1)
+    	your terminal symbol counts in one line (default 1)
   -cubes.horizontal-offsets value
-        horizontal positions of cubes, count must be equal to cubes.count
+    	horizontal positions of cubes, count must be equal to cubes.count
   -cubes.widths value
-        widths of cubes, count must be equal to cubes.count
+    	widths of cubes, count must be equal to cubes.count
   -screen.height int
-        your terminal symbol counts in one line (default 287) (default 67)
+    	your terminal symbol counts in one line (default 67)
   -screen.width int
-        your terminal symbol counts in one column (default 67) (default 287)
+    	your terminal symbol counts in one column (default 287)
 ```
