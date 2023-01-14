@@ -9,6 +9,14 @@ wget https://github.com/alex123012/cube-rotate/releases/download/${VERSION}/cube
 tar -C bin/ -xf cube-rotate-${VERSION}-${OS}-${ARCH}.tar.gz cube-rotate
 ```
 
+or build from source:
+```bash
+git clone https://github.com/alex123012/cube-rotate.git
+cd cube-rotate
+mkdir -p bin
+go build -o bin/cube-rotate ./cmd/cube-rotate/
+```
+
 ## Usage
 ```bash
 bin/cube-rotate --screen.width 205 --screen.height 44 --cubes.horizontal-offsets -50 --toruses.horizontal-offsets 50 --screen.background-symbol '.' --cubes.count 1 --toruses.count 1 --toruses.distances 10 --screen.fps 100
